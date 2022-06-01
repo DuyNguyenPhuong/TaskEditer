@@ -1,10 +1,19 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 import { title } from "process";
+import { Repository } from "typeorm";
 import { takeCoverage } from "v8";
 import { Task } from "./tasks.model";
+import { User1 } from "./user.entity";
 
 @Injectable()
 export class TasksService{
+    constructor(
+        @InjectRepository(User1)
+        private readonly taskRepository: Repository<User1>
+    ) {}
+
+        
     tasks: Task[] = [];
 
     insertTask(title: string, des: string){
