@@ -2,9 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 
 @Entity()
-export class User1 {
+export class Task {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
   titleTask: string;

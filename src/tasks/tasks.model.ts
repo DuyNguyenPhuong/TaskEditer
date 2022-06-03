@@ -1,6 +1,6 @@
-export class Task{
+// export class Task{
 
 
-    constructor(public id: string, public title: string, public des: string){
-    };
-}
+//     constructor(public id: string, public title: string, public des: string){
+//     };
+// }
