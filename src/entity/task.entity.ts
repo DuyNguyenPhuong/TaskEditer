@@ -3,7 +3,9 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Task {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('identity', {
+    generatedIdentity: 'ALWAYS'
+  })
   id: string;
 
   @Column()
@@ -11,4 +13,7 @@ export class Task {
 
   @Column()
   desTask: string;
+
+  // @Column()
+  // active: string;
 }

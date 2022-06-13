@@ -9,4 +9,7 @@ export class CreateTaskDto{
 
     @IsNotEmpty()
     des_dto: string;
+
+    // @IsNotEmpty()
+    // active_dto: string;
 }
