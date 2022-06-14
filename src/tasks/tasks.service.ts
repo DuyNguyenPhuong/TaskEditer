@@ -29,7 +29,6 @@ export class TasksService{
     }
 
     public async getTasks(){
-
     // public async getTasks(taskID: string, taskTitle: string, taskDes: string){
         // const result = await this.taskRepository.createQueryBuilder()
         // .where("task.id = taskID")

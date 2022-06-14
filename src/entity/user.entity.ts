@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Task } from './task.entity';
 
 
 @Entity()
@@ -11,9 +12,6 @@ export class User {
   @Column()
   user_password: string;
 
-//   @Column()
-//   user_time: string;
-
-  // @Column()
-  // active: string;
+  @ManyToMany(()=> Task, task => task.id)
+  task: Task;
 }

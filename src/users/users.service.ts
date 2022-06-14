@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "src/user.entity";
+import { User } from "src/entity/user.entity";
+
 
 import { Repository } from "typeorm";
 
@@ -18,7 +19,7 @@ export class UsersService{
             throw new HttpException({key: 'TOO_LONG_PASS'}, HttpStatus.BAD_REQUEST);
         }
         const newUser = new User();
-        newUser.desTask = pass;
+        newUser.user_password = pass;
         const result = await this.usersRepository.save(newUser);
         if (result) return result;
         throw new HttpException({key: 'INTERNAL_SERVER'}, HttpStatus.INTERNAL_SERVER_ERROR);

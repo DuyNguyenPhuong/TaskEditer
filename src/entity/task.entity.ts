@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinColumn, JoinTable } from 'typeorm';
+import { User } from './user.entity';
 
 
 @Entity()
@@ -14,6 +15,16 @@ export class Task {
   @Column()
   desTask: string;
 
+  @Column()
+  statustask: string;
+
   // @Column()
-  // active: string;
+  // lasteditby: User;
+
+
+  // @ManyToMany(()=> User, user => user.user_id)
+  // user: User;
+
+  // @JoinTable()
+  // users: User[]
 }

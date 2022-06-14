@@ -5,7 +5,7 @@ import { UsersService } from "./users.service";
 export class UsersController {
     constructor(private readonly usersService: UsersService){}
     @Post()
-    addUser(@Body() pass: string){
+    addUser(@Body('pass') pass: string){
         this.usersService.insertUser(pass);
     }
 
