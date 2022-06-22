@@ -1,12 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinColumn, JoinTable } from 'typeorm';
+import { userInfo } from 'os';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinColumn, JoinTable, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 
 
-@Entity()
+@Entity('task')
 export class Task {
-  @PrimaryGeneratedColumn('identity', {
-    generatedIdentity: 'ALWAYS'
-  })
+  @PrimaryGeneratedColumn('identity', 
+  // {
+  //   generatedIdentity: 'ALWAYS'
+  // }
+  )
   id: string;
 
   @Column()
@@ -19,8 +22,11 @@ export class Task {
   statustask: string;
 
   // @Column()
-  // lasteditby: User;
+  // lasteditby: string;
 
+  @ManyToMany(() => User, (user) => user.user_id, {cascade: true,})
+  @JoinTable({name: 'task-user-table'})
+  EditBy: User[];
 
   // @ManyToMany(()=> User, user => user.user_id)
   // user: User;

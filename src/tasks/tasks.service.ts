@@ -2,72 +2,102 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestj
 import { InjectRepository } from "@nestjs/typeorm";
 import { response } from "express";
 import { Task } from "src/entity/task.entity";
+import { User } from "src/entity/user.entity";
+import { TaskRepository,  } from "src/Repository/TaskRepository";
+import { TaskUserRepository } from "src/Repository/TaskUserRepository";
+import { UserRepository } from "src/Repository/UserRepository";
 
-import { Like, Not, Repository } from "typeorm";
+import { getCustomRepository, getRepository, Like, Not, Repository } from "typeorm";
+import { CreateTaskDto } from "./dto/CreateTask.dto";
 
 
 @Injectable()
 export class TasksService{
     constructor(
         @InjectRepository(Task)
-        private readonly taskRepository: Repository<Task>
+        private readonly taskRepository: TaskRepository,
+
+        @InjectRepository(User)
+        private readonly userRepository: UserRepository
+
     ) {}
 
 
-
-    public async insertTask(title: string, des: string){
-        if (title.length>10 || des.length >10){
+    public async insertTask(createTaskDto: CreateTaskDto){
+        if (createTaskDto.title_dto.length>10 || createTaskDto.des_dto.length >10){
             throw new HttpException({key: 'TOO_LONG_TITLE'}, HttpStatus.BAD_REQUEST);
         }
+        
+       
         const newTask = new Task();
-        newTask.titleTask = title;
-        newTask.desTask = des;
-        // newTask.active = "1";
+        newTask.titleTask = createTaskDto.title_dto;
+        newTask.desTask = createTaskDto.des_dto;
+        newTask.statustask = "1";
+
+        let editByArr = [];
+        for (var val of createTaskDto.editby_dto){
+            const userEntity = await this.userRepository.findOne(val);
+            editByArr.push(userEntity);
+        }
+        // const userTest = await this.userRepository.findOne('1');
+        // const userTest2 = await this.userRepository.findOne('2');
+        newTask.EditBy = editByArr;
+        // newTask.lastEditBy = createTaskDto.editby_dto;
+    
         const result = await this.taskRepository.save(newTask);
         if (result) return result;
         throw new HttpException({key: 'INTERNAL_SERVER'}, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public async getTasks(){
-    // public async getTasks(taskID: string, taskTitle: string, taskDes: string){
-        // const result = await this.taskRepository.createQueryBuilder()
-        // .where("task.id = taskID")
-        // .orWhere("task.titleTask = :title", {title: taskTitle})
-        // .orWhere("task.desTask = :des", {des: taskDes})
-        // .execute();
-
-    
-            // options: {
-            //     // id: Like('%'+ taskID + '%'),
-            //     // titleTask: Like('%'+ taskTitle + '%'),
-            //     // desTask: Like('%' + taskDes + '%'),
-            //     id: taskID,
-            //     titleTask: taskTitle,
-            //     desTask: taskDes,
-            // },
-        //         id: Like('%'+ taskID + '%'),
-        //   });
-            const result = await this.taskRepository.find();
+        // const result this.TaskRepo.findTask;
+        const result = await this.taskRepository.find();
         return result
     }
 
-    // getSingleTask(taskId: string){
-    //     // const task = this.findTask(taskId)[0]
-    //     // return {...task}
-    //     return this.taskRepository.findOne(taskId);
-    // }
+    getSingleTask(taskId: string){
+        // const task = this.findTask(taskId)[0]
+        // return {...task}
+        return this.taskRepository.findOne(taskId);
+    }
 
-    updateTask(taskId: string, taskTitle: string, taskDes: string){
+    public async updateTask(taskId: string, updateTaskDto: CreateTaskDto){
+        const updateId = await this.taskRepository.findOneOrFail(taskId);
+        if (!updateId){
+            throw new HttpException({key: 'INTERNAL_SERVER'}, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        // this.taskRepository.delete(updateId);
+
         const editTask = new Task();
-        // editTask.id = taskId;
-        editTask.titleTask = taskTitle;
-        editTask.desTask = taskDes;
+        editTask.id = taskId;
+        
+        editTask.titleTask = updateTaskDto.title_dto;
+        editTask.desTask = updateTaskDto.des_dto;
+        editTask.statustask = updateTaskDto.active_dto;
+        // editTask.EditBy = ['1', '3'];
+
+        const userTest = await this.userRepository.findOne('1');
+        const userTest2 = await this.userRepository.findOne('3');
+        editTask.EditBy = [userTest, userTest2];
+        editTask.EditBy = await this.findUserEntity(updateTaskDto.editby_dto);
+        // this.taskRepository.save(editTask);
         this.taskRepository.update(taskId, editTask);
     }
 
     async deleteTask(taskId: string){
         // const index = this.findTask(taskId)[1];
         // this.tasks.splice(index, 1);
-        await this.taskRepository.delete(taskId);
+        await this.taskRepository.update(taskId, {statustask: "0"});
+    }
+
+    async findUserEntity(IdArray: string[]){
+        let editByArr = [];
+        for (var val of IdArray){
+            const userEntity = await this.userRepository.findOne(val);
+            editByArr.push(userEntity);
+        }
+        // const userTest = await this.userRepository.findOne('1');
+        // const userTest2 = await this.userRepository.findOne('2');
+        return editByArr;
     }
 }

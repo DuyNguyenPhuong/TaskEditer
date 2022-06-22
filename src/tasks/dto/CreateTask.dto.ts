@@ -1,5 +1,4 @@
 import { IsNotEmpty } from "class-validator";
-
 export class CreateTaskDto{
 
     id_dto: string;
@@ -12,5 +11,5 @@ export class CreateTaskDto{
 
     active_dto: string;
 
-    editby_dto: string;
+    editby_dto: string[];
 }

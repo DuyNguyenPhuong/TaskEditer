@@ -9,7 +9,7 @@ export class TasksController {
     @Post()
     @UsePipes(ValidationPipe)
     addTask(@Body() createTaskDto: CreateTaskDto){
-        this.tasksService.insertTask(createTaskDto.title_dto, createTaskDto.des_dto);
+        this.tasksService.insertTask(createTaskDto);
     }
 
     @Get()
@@ -17,14 +17,14 @@ export class TasksController {
         return this.tasksService.getTasks();
     }
 
-    // @Get(':id')
-    // getTask(@Param('id') taskId: string){
-    //     return this.tasksService.getSingleTask(taskId);
-    // }
+    @Get(':id')
+    getTask(@Param('id') taskId: string){
+        return this.tasksService.getSingleTask(taskId);
+    }
 
     @Patch(':id')
-    updateTask(@Param('id') taskId: string, @Body() creatTaskDto: CreateTaskDto){
-        this.tasksService.updateTask(taskId, creatTaskDto.title_dto, creatTaskDto.des_dto);
+    updateTask(@Param('id') taskId: string, @Body() createTaskDto: CreateTaskDto){
+        this.tasksService.updateTask(taskId, createTaskDto);
     }
 
     @Delete(':id')

@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import { typeOrmConfig } from './orm.config';
 import { TasksModule } from './tasks/tasks.module';
+import { TaskUserModule } from './TaskUser/taskuser.module';
 import { UsersModule } from './users/users.module';
+
 
 
 
@@ -11,7 +14,9 @@ import { UsersModule } from './users/users.module';
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
     TasksModule,
-    UsersModule
+    UsersModule,
+    AuthModule
+    
   ],
   // controllers: [AppController],
   // providers: [AppService],
